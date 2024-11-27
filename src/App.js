@@ -1,25 +1,178 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useEffect, useRef, useState } from "react";
+import WaveSurfer from "wavesurfer.js";
+import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
+import axios from "axios";
+import Navbar from "./components/Navbar";
+const AudioRecorder = () => {
+  const [waveSurfer, setWaveSurfer] = useState(null);
+  const [recordPlugin, setRecordPlugin] = useState(null);
+  const [recording, setRecording] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [continuousWaveform] = useState(true);
+  const [availableDevices, setAvailableDevices] = useState([]);
+  const [transcripts, setTranscripts] = useState([]);
+  const [screen, setScreen] = useState(1);
+  const userId = useRef(1) //this could be the logged in users id
 
-function App() {
+  const micRef = useRef();
+  const recordingsRef = useRef();
+
+  useEffect(() => {
+    console.log(process.env.REACT_APP_API_URL)
+    createWaveSurfer();
+
+    return () => {
+      if (waveSurfer) waveSurfer.destroy();
+    };
+  }, []);
+
+  const createWaveSurfer = () => {
+    if (waveSurfer) waveSurfer.destroy();
+
+    const ws = WaveSurfer.create({
+      container: micRef.current,
+      waveColor: "rgb(200, 0, 200)",
+      progressColor: "rgb(100, 0, 100)",
+    });
+
+    const record = RecordPlugin.create({
+      renderRecordedAudio: false,
+      continuousWaveform,
+      continuousWaveformDuration: 30,
+      mimeType: "video/mp4",
+    });
+
+    ws.registerPlugin(record);
+
+    record.on("record-end", async (blob) => {
+      const recordedUrl = URL.createObjectURL(blob);
+      setAudioBlob(blob);
+
+      const playbackWaveSurfer = WaveSurfer.create({
+        container: recordingsRef.current,
+        waveColor: "rgb(200, 100, 0)",
+        progressColor: "rgb(100, 50, 0)",
+        url: recordedUrl,
+      });
+
+      recordingsRef.current.innerHTML = "";
+
+      const playButton = document.createElement("button");
+      playButton.textContent = "Play";
+      playButton.onclick = () => playbackWaveSurfer.playPause();
+      playbackWaveSurfer.on("pause", () => (playButton.textContent = "Play"));
+      playbackWaveSurfer.on("play", () => (playButton.textContent = "Pause"));
+
+      // recordingsRef.current.appendChild(playButton);
+
+      await submitAudio(blob);
+    });
+
+    setWaveSurfer(ws);
+    setRecordPlugin(record);
+  };
+
+  const startRecording = async () => {
+    setScreen(2);
+    recordPlugin.startRecording();
+    setRecording(true);
+    setPaused(false);
+  };
+
+  const stopRecording = async () => {
+    await recordPlugin.stopRecording();
+    setRecording(false);
+    setPaused(false);
+  };
+
+  const submitAudio = async (blob) => {
+    const formData = new FormData();
+    formData.append("audio", blob, "recording.mp4");
+    console.log('user id: ', userId.current)
+    formData.append('user_id', userId.current)
+
+    const headers = {
+      "Content-Type": "multipart/form-data",
+    };
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/transcribe/audio`,
+        formData,
+        headers
+      );
+      console.log("resp", response.data);
+      setTranscripts((prevTranscripts) => [response.data, ...prevTranscripts]);
+      console.log(transcripts);
+    } catch (error) {
+      console.error("Error submitting audio:", error);
+    }
+  };
+
+  const fetchAudioDevices = async () => {
+    const devices = await RecordPlugin.getAvailableAudioDevices();
+    setAvailableDevices(devices);
+  };
+
+  useEffect(() => {
+    fetchAudioDevices();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="body">
+      <Navbar />
+      {screen === 1 ? (
+        <div className="container">
+          <div id="mic" ref={micRef}></div>
+          <div className="header">
+            <div className="header_text_container">
+              <h1 className="header_text">Welcome to Darli</h1>
+            </div>
+            <button className="button" onClick={startRecording}>
+              {"Start Recording"}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="main_trans">
+          <div className="recorder">
+            <div id="mic" className="mic" ref={micRef}></div>
+            {/* {recording 
+            ? 
+              <><span className="end_button">
+                    <a href="" onClick={stopRecording}>X</a>
+                  </span><span className="end_button_text">Click to end </span></>
+            : */}
+            <button
+              className="button"
+              onClick={recording ? stopRecording : startRecording}
+            >
+              {recording ? "Stop Recording" : "Start Recording"}
+            </button> 
+          {/* } */}
+            <div id="recordings" ref={recordingsRef}></div>
+          </div>
+          <div>
+            <aside className="transcripts">
+              <h3>Transcript</h3>
+              {transcripts.map((transcript, index) => (
+                <div className="transcriptItem" key={index} >
+                  <div className="transcriptInner">
+                    <span className="timestamp">{transcript.timestamp}</span>
+                    <p>{transcript.transcription}</p>
+                  </div>
+                </div>
+              ))}
+            </aside>
+          </div>
+        </div>
+      )}
+      </div>
     </div>
   );
-}
+};
 
-export default App;
+export default AudioRecorder;

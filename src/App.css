@@ -1,38 +1,111 @@
-.App {
-  text-align: center;
+.body {
+  margin: 0;
+  font-family: 'Public sans', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  background-image: url('https://s3-alpha-sig.figma.com/img/fb83/0fc1/cbea2901c8a86f8288cf1e0c4b3a6139?Expires=1733702400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=kv0ghKHzB~O5IPo-LsJ0K8IeSMAMIUUAf68VowH~uClxD5bk9S-ZwQvFd-71YoWHJ2M4cQpPgHFxarQq4z2kPftMpaALOlS63shVXImObs~UfPd27vi0cIJnU5tl8rMTzKv~zlFAAeESqiCia4C79Q9~XL6WyNaHnRtink3PkSS-vz2yQijFzXswl4TNzxxe8YqR5AsECAISk44R4v7hzwt0wac~UU-eSCd1r8ab85r-B5TsrBMy8O~XVltEO1Vc89d-TufxP0Cvt4RCE8tBVtk4DLdpdcez2Q35by~WropJWt2dUi8oI0CHbG29F2UzpDbfoizv2KMJrbAEP6cxWQ__');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.container {
   align-items: center;
+  flex-direction: column;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  display: flex;
+  text-align: center,
+}
+.header {
+  height: 157px;
+  width: 480px;
+  padding: 20px,
+}
+.header_text_container {
+  width: 100%;
+  height: 71px,
+}
+.header_text {
+  font-weight: 600;
+  line-height: 70.5px;
+  font-size: 55px;
+  margin: 0;
 }
 
-.App-link {
-  color: #61dafb;
+.button {
+  margin-top: 30px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  width: 186px;
+  height: 56px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main_trans {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mic {
+  margin-bottom: 200px;
+  width: 782px;
+  height: 64px;
+}
+
+.recorder {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.transcripts {
+  color: #000;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 492px;
+  height: 800px;
+  max-height: 800px;
+  overflow-y: scroll;
+  margin-top: 36px;
+  margin-right: 41px,
+}
+
+.transcriptItem {
+  margin-bottom: 15px;
+  border: 1px solid #E7E7E7;
+  border-radius: 8px;
+  width: 397px;
+  height: 98px;
+  padding: 5px;
+}
+
+.timestamp {
+  display: flex;
+  text-align: center;
+  font-size: 12px;
+  color: #616161;
+}
+
+.transcriptInner {
+  width: 381px;
+  height: 71px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.end_button {
+  background-color: white;
+  padding: 8px;
+  border-radius: 7px;
+}
+.end_button a {
+  text-decoration: none;
+}
+.end_button_text {
+  padding-top: 2px;
+  font-size: 10px;
 }
