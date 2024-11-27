@@ -149,7 +149,7 @@ const AudioRecorder = () => {
               </div>
 
               {recording ? (
-                <div className="">
+                <div className="abutton">
                   <a className="" href={href} onClick={stopRecording}>
                     <span className="end_button">x</span>
                     <span className="end_button_text">Click to end </span>
