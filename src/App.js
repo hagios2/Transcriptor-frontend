@@ -14,13 +14,13 @@ const AudioRecorder = () => {
   const [availableDevices, setAvailableDevices] = useState([]);
   const [transcripts, setTranscripts] = useState([]);
   const [screen, setScreen] = useState(1);
-  const userId = useRef(1) //this could be the logged in users id
+  const userId = useRef(1); //this could be the logged in users id
 
-  const micRef = useRef();
+  const micRef = useRef(null);
   const recordingsRef = useRef();
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_API_URL)
+    console.log(process.env.REACT_APP_API_URL);
     createWaveSurfer();
 
     return () => {
@@ -35,6 +35,9 @@ const AudioRecorder = () => {
       container: micRef.current,
       waveColor: "rgb(200, 0, 200)",
       progressColor: "rgb(100, 0, 100)",
+      width: 728,
+      fillParent: true,
+      // container: 'body',
     });
 
     const record = RecordPlugin.create({
@@ -90,8 +93,7 @@ const AudioRecorder = () => {
   const submitAudio = async (blob) => {
     const formData = new FormData();
     formData.append("audio", blob, "recording.mp4");
-    console.log('user id: ', userId.current)
-    formData.append('user_id', userId.current)
+    formData.append("user_id", userId.current);
 
     const headers = {
       "Content-Type": "multipart/form-data",
@@ -123,53 +125,62 @@ const AudioRecorder = () => {
   return (
     <div>
       <div className="body">
-      <Navbar />
-      {screen === 1 ? (
-        <div className="container">
-          <div id="mic" ref={micRef}></div>
-          <div className="header">
-            <div className="header_text_container">
-              <h1 className="header_text">Welcome to Darli</h1>
+        <Navbar />
+        {screen === 1 ? (
+          <div className="container">
+            <div id="mic" ref={micRef}></div>
+            <div className="header">
+              <div className="header_text_container">
+                <h1 className="header_text">Welcome to Darli</h1>
+              </div>
+              <button className="button" onClick={startRecording}>
+                {"Start Recording"}
+              </button>
             </div>
-            <button className="button" onClick={startRecording}>
-              {"Start Recording"}
-            </button>
           </div>
-        </div>
-      ) : (
-        <div className="main_trans">
-          <div className="recorder">
-            <div id="mic" className="mic" ref={micRef}></div>
-            {/* {recording 
+        ) : (
+          <div className="main_trans">
+            <div className="recorder">
+              <div className="mic">
+                <div id="mic" ref={micRef}></div>
+              </div>
+
+              {/* {recording 
             ? 
               <><span className="end_button">
                     <a href="" onClick={stopRecording}>X</a>
                   </span><span className="end_button_text">Click to end </span></>
             : */}
-            <button
-              className="button"
-              onClick={recording ? stopRecording : startRecording}
-            >
-              {recording ? "Stop Recording" : "Start Recording"}
-            </button> 
-          {/* } */}
-            <div id="recordings" ref={recordingsRef}></div>
-          </div>
-          <div>
-            <aside className="transcripts">
-              <h3>Transcript</h3>
-              {transcripts.map((transcript, index) => (
-                <div className="transcriptItem" key={index} >
-                  <div className="transcriptInner">
-                    <span className="timestamp">{transcript.timestamp}</span>
-                    <p>{transcript.transcription}</p>
-                  </div>
+              <div className="btn">
+              <button
+                className="button"
+                onClick={recording ? stopRecording : startRecording}
+              >
+                {recording ? "Stop Recording" : "Start Recording"}
+              </button>
+            </div> 
+              {/* } */}
+              <div id="recordings" ref={recordingsRef}></div>
+            </div>
+            <div className="trans_parent">
+              <div className="transcripts">
+                <h3>Transcript</h3>
+                <div className="trans_content">
+                  {transcripts.map((transcript, index) => (
+                    <div className="transcriptItem" key={index}>
+                      <div className="transcriptInner">
+                        <span className="timestamp">
+                          {transcript.timestamp}
+                        </span>
+                        <p>{transcript.transcription}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </aside>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );
