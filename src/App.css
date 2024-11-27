@@ -56,7 +56,7 @@ body, html {
   color: #fff;
   border: none;
   border-radius: 5px;
-  width: 30%;
+  width: 100%;
   max-width: 200px;
   height: 50px;
   font-size: 1rem;
@@ -160,39 +160,28 @@ a {
 }
 
 /* Media Queries */
-/* @media (min-width: 768px) {
-  .main_trans {
-    flex-direction: row;
+@media (min-width: 891px) and (max-width: 1300px) {
+  .button {
+    font-size: 0.9rem;
+    height: 40px;
     width: 100%;
   }
 
-  .recorder {
+  .main_trans {
+    display: flex;
+    align-items: start;
+    padding: 20px;
   }
+
+  /* .recorder {
+    flex-wrap:initial;
+  } */
 
   .transcripts {
     margin: 0;
-    max-height: 800px;
+    width: 350px !important;
   }
-} */
-
-/* @media (min-width: 481px) {
-  .header_text {
-    font-size: 2rem;
-  }
-
-  .mic {
-    height: 50px;
-  }
-
-  .button {
-    font-size: 0.8rem;
-    height: 40px;
-  }
-
-  .transcripts {
-    max-height: 300px;
-  }
-} */
+} 
 
 @media (max-width: 890px) {
 
@@ -256,13 +245,12 @@ a {
   }
 
   .button {
-    font-size: 1.1rem;
+    font-size: 0.7rem;
     height: 40px;
     width: 35%;
   }
 
   .main_trans {
-    /* display: block; */
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -276,7 +264,7 @@ a {
   }
 
   .transcripts {
-    width: 100% !important;
+    width: 95% !important;
   }
 } 
  

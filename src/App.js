@@ -37,7 +37,6 @@ const AudioRecorder = () => {
       progressColor: "rgb(100, 0, 100)",
       width: 728,
       fillParent: true,
-      // container: 'body',
     });
 
     const record = RecordPlugin.create({
@@ -107,7 +106,6 @@ const AudioRecorder = () => {
       );
       console.log("resp", response.data);
       setTranscripts((prevTranscripts) => [response.data, ...prevTranscripts]);
-      console.log(transcripts);
     } catch (error) {
       console.error("Error submitting audio:", error);
     }
