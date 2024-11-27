@@ -118,6 +118,9 @@ const AudioRecorder = () => {
     setAvailableDevices(devices);
   };
 
+  // eslint-disable-next-line no-script-url
+  const href = 'javascript:void(0);'
+
   useEffect(() => {
     fetchAudioDevices();
   }, []);
@@ -145,21 +148,23 @@ const AudioRecorder = () => {
                 <div id="mic" ref={micRef}></div>
               </div>
 
-              {/* {recording 
-            ? 
-              <><span className="end_button">
-                    <a href="" onClick={stopRecording}>X</a>
-                  </span><span className="end_button_text">Click to end </span></>
-            : */}
-              <div className="btn">
-              <button
-                className="button"
-                onClick={recording ? stopRecording : startRecording}
-              >
-                {recording ? "Stop Recording" : "Start Recording"}
-              </button>
-            </div> 
-              {/* } */}
+              {recording ? (
+                <div className="">
+                  <a className="" href={href} onClick={stopRecording}>
+                    <span className="end_button">x</span>
+                    <span className="end_button_text">Click to end </span>
+                  </a>
+                </div>
+              ) : (
+                <div className="btn">
+                  <button
+                    className="button"
+                    onClick={recording ? stopRecording : startRecording}
+                  >
+                    {recording ? "Stop Recording" : "Start Recording"}
+                  </button>
+                </div>
+              )}
               <div id="recordings" ref={recordingsRef}></div>
             </div>
             <div className="trans_parent">
